@@ -34,7 +34,7 @@ type structureInfo struct {
 }
 
 // format: sources[;flags], sources: source[,source]*, flags: [inline]
-type fieldOptions struct {
+type FieldOptions struct {
 	Sources []string
 	Inline  bool
 }
@@ -50,6 +50,8 @@ type Parser struct {
 	structures map[reflect.Type]*structureInfo
 }
 
+// optionsTag is used for retrieve field options, each source can have it's own name, if not specified, use name of first
+// source or converted field name by default.
 func NewParser(optionsTag string, validSources []string, fieldNameConverter func(string) string) (*Parser, error) {
 	p := Parser{
 		optionsTag:    optionsTag,
@@ -84,11 +86,11 @@ func (p *Parser) RegisterTypes(types ...Type) error {
 	return nil
 }
 
-func (p *Parser) parseFieldOptions(val string) fieldOptions {
+func (p *Parser) parseFieldOptions(val string) FieldOptions {
 	if val == "" || val == "-" {
-		return fieldOptions{}
+		return FieldOptions{}
 	}
-	var options fieldOptions
+	var options FieldOptions
 	secs := strings.SplitN(val, ";", 2)
 	l := len(secs)
 	if l > 0 {

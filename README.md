@@ -6,18 +6,29 @@
 
 go-schema is a simple library for go to bind source strings into structures, inspired by [gorilla/schema](https://github.com/gorilla/schema).
 
-# install
+# Install
 ```bash
 go get github.com/cosiner/go-schema
 ``` 
-# features
+# Features
 * implements builtin data types for almost all go primitive types: bool,string,int(8,16,32,64), uint, float...
 * support slice
 * support custom data type by implements specified interface
 * support multiple data source such as url query params, path params, headers, and so on. user can add their own sources
   by implements specified interface.
+* support anonymous embed structure, structure field, inline structure  
 
-# example
+# FieldTags
+```Go
+// format: sources[;flags], sources: source[,source]*, flags: [inline]
+type FieldOptions struct {
+	Sources []string
+	Inline  bool // for structure field
+}
+```
+Each source can have it's own name, if not specified, use name of first source or converted field name by default.
+
+# Example
 ```Go
 
 type httpRequestSource struct {
@@ -114,5 +125,5 @@ func ExampleDecoder_Decode() {
 
 ```
 
-# license
+# License
 MIT.
