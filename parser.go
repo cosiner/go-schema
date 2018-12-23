@@ -131,6 +131,9 @@ func (p *Parser) newContext(context, name string) string {
 	if context == "" {
 		return name
 	}
+	if name == "" {
+		return context
+	}
 	return context + "." + name
 }
 
@@ -192,6 +195,8 @@ func (p *Parser) parse(typ reflect.Type) (*structureInfo, error) {
 					} else {
 						parseQueue = append(parseQueue, parseNode{Type: f.Type, Context: p.newContext(node.Context, name), Index: p.newIndex(node.Index, f.Index)})
 					}
+				} else if len(options.Sources) > 0 {
+					return nil, fmt.Errorf("unsupported field type: %s, %s: %s", p.newContext(typ.String(), node.Context), name, f.Type.String())
 				}
 				continue
 			}

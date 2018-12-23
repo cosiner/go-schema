@@ -49,6 +49,9 @@ func (d *Decoder) decodeField(refv reflect.Value, field *fieldInfo, v []string) 
 	if err != nil || !ok {
 		return false, err
 	}
+	if val.Type() != field.Field.Type {
+		return false, fmt.Errorf("different decoded value type: expect %s, but got %s", field.Field.Type, val.Type())
+	}
 
 	fieldv := refv.FieldByIndex(field.Field.Index)
 	fieldv.Set(val)
